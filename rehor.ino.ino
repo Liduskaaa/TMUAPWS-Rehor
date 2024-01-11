@@ -1,4 +1,4 @@
-#define I2C_SDA A4 // definice analogových pinů pro display
+t#define I2C_SDA A4 // definice analogových pinů pro display
 #define I2C_SCL A5
 #include "LiquidCrystal_I2C.h" // knihovna pro display s převodníkem
 
