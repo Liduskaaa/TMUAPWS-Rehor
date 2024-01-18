@@ -4,7 +4,8 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-const int tlacitka[] = {3,2,5,4};
+// Vsechna cisla, ktera nabyvaji jen malych hodnot, mohou byt byty.
+const byte tlacitka[] = {3,2,5,4};
 int stisk_1 = 0;
 int stisk_2 = 0;
 int stisk_3 = 0;
@@ -12,11 +13,11 @@ int vlhkost = 0;
 int tlac = 0;
 int cilova = 0;
 int frek = 0;
-const int Rele = 6;
+const byte Rele = 6;
 
 void setup() {
   Serial.begin(9600);
-    lcd.begin();
+  lcd.begin();
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Rehor sees you");
@@ -49,7 +50,8 @@ void loop() {
   delay(2000);
   digitalWrite(Rele, HIGH);
 
-  vlhkost = analogRead(A0);
+  // redundantni mereni
+  //vlhkost = analogRead(A0);
   Serial.print("Vlhkost: ");
   Serial.println(vlhkost);
   delay(1000);
