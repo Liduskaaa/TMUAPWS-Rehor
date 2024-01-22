@@ -1,5 +1,9 @@
 # rehor
 Software pro systém na zalévání květin Řehoř (2024).
-* potřebné knihovny
-* funkční a okomentovaný kód
-* upravovat můžeš přímo tady, ale můžeš si to i stáhnout,  v tom případě použij Arduino IDE
+dodělat:
+* za jak dlouho se to zalije
+* on/off displej
+* rest in piece?
+* easter eggy?
+* doladit nastavování hodnot 60 -> 0
+* doladit celkově
