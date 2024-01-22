@@ -36,6 +36,14 @@ void zobraz_f() {
   lcd.print("Jeee jeee je");
 }
 
+// Lze pouzit i misto funkci nahore
+void napis_radek(byte cislo_radku, String text, bool clear) {
+  if (clear) {
+    lcd.clear();}
+  lcd.setCursor(0, cislo_radku);
+  lcd.print(text);
+}
+
 void setup() {
   Serial.begin(9600);
   lcd.begin();
@@ -79,6 +87,10 @@ void setup() {
     }
 
   }
+  
+  napis_radek(0, "Jsi mimo", true);
+  napis_radek(1, "Pust to", false);
+  delay(2000);
 
   zobraz_f();
 
