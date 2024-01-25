@@ -5,7 +5,7 @@
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-const int tlacitka[] = {3,2,5,4};
+const byte tlacitka[] = {3,2,5,4};
 bool stisk_1 = 0;
 bool stisk_2 = 0;
 bool stisk_3 = 0;
@@ -17,7 +17,7 @@ int cilova = 0;
 
 int cil_f = 0;
 
-const int Rele = 6;
+const byte Rele = 6;
 
 void zobraz() {
   lcd.clear();
