@@ -2,18 +2,47 @@
 #define I2C_SCL A5
 #include "LiquidCrystal_I2C.h"
 
+
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
-// Vsechna cisla, ktera nabyvaji jen malych hodnot, mohou byt byty.
 const byte tlacitka[] = {3,2,5,4};
-int stisk_1 = 0;
-int stisk_2 = 0;
-int stisk_3 = 0;
-int vlhkost = 0;
+bool stisk_1 = 0;
+bool stisk_2 = 0;
+bool stisk_3 = 0;
+bool stisk_4 = 0;
 int tlac = 0;
+
+int vlhkost = 0;
 int cilova = 0;
-int frek = 0;
+
+int cil_f = 0;
+
 const byte Rele = 6;
+
+void zobraz() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  vlhkost = analogRead(A0);
+  lcd.print("Humidity: " + (String) vlhkost);
+  lcd.setCursor(0, 1);
+  lcd.print("Desired: " + (String) cilova);
+}
+
+void zobraz_f() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Frequency: " + (String) cil_f);
+  lcd.setCursor(0, 1);
+  lcd.print("Jeee jeee je");
+}
+
+// Lze pouzit i misto funkci nahore
+void napis_radek(byte cislo_radku, String text, bool clear) {
+  if (clear) {
+    lcd.clear();}
+  lcd.setCursor(0, cislo_radku);
+  lcd.print(text);
+}
 
 void setup() {
   Serial.begin(9600);
@@ -21,74 +50,77 @@ void setup() {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Rehor sees you");
+  delay(3000);
   Serial.println("");
   Serial.println("NOVÉ TESTOVÁNÍ");
   for(int x=0; x<4; x++)
   {
-    // zapojení tlačítek jako vstup s pull-up odporem
     pinMode(tlacitka[x], INPUT_PULLUP);
   }
 
-  pinMode(Rele, OUTPUT);
-  delay(3000);
-  lcd.clear();
+  //pinMode(Rele, OUTPUT);
+
+  zobraz();
+
+  //stisk_2 = digitalRead(tlacitka[1]);
+  //stisk_3 = digitalRead(tlacitka[2]);
+  stisk_4 = digitalRead(tlacitka[3]);
+
+  while (stisk_4 == HIGH) {
+
+    stisk_2 = digitalRead(tlacitka[1]);
+    stisk_3 = digitalRead(tlacitka[2]);
+    stisk_4 = digitalRead(tlacitka[3]);
+
+    if (stisk_2 == LOW && cilova >= 5) {
+      cilova = cilova - 5;
+      delay(500);
+      zobraz();
+      //stisk_2 = digitalRead(tlacitka[1]);
+    }
+
+    else if (stisk_3 == LOW && cilova <= 95) {
+      cilova = cilova + 5;
+      delay(500);
+      zobraz();
+      //stisk_3 = digitalRead(tlacitka[2]);
+    }
+
+  }
+  
+  napis_radek(0, "Jsi mimo", true);
+  napis_radek(1, "Pust to", false);
+  delay(2000);
+
+  zobraz_f();
+
+  stisk_4 = digitalRead(tlacitka[3]);
+
+  while (stisk_4 == HIGH) {
+
+    stisk_2 = digitalRead(tlacitka[1]);
+    stisk_3 = digitalRead(tlacitka[2]);
+    stisk_4 = digitalRead(tlacitka[3]);
+
+    if (stisk_2 == LOW && cil_f >= 1) {
+      cil_f = cil_f - 1;
+      delay(500);
+      zobraz_f();
+      //stisk_2 = digitalRead(tlacitka[1]);
+    }
+
+    else if (stisk_3 == LOW && cil_f <= 59) {
+      cil_f = cil_f + 1;
+      delay(500);
+      zobraz_f();
+      //stisk_3 = digitalRead(tlacitka[2]);
+    }
+
+  }
+
 }
 
 void loop() {
-  vlhkost = analogRead(A0);
-  Serial.println("chacha");
-  lcd.clear();
-  lcd.setCursor(0, 0);
-
-  lcd.print("Hum: " + (String) vlhkost + "/" + (String) cilova);
-  lcd.setCursor(0, 1);
-  lcd.print("Frequency: ");
-
-  digitalWrite(Rele, LOW);
-  delay(2000);
-  Serial.println("zapnuto?");
-  delay(2000);
-  digitalWrite(Rele, HIGH);
-
-  // redundantni mereni
-  //vlhkost = analogRead(A0);
-  Serial.print("Vlhkost: ");
-  Serial.println(vlhkost);
-  delay(1000);
-
-  while (stisk_1 == HIGH) {
-    stisk_1 = digitalRead(tlacitka[0]);
-    stisk_2 = digitalRead(tlacitka[0]);
-  }
-
-  if (stisk_1 == LOW) { // vytiskni pres sériovou linku číslo tlačítka a zprávu
-    tlac = 1;
-    Serial.print(tlac);
-    Serial.println(" stisknuto");
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Change humidity:");
-    lcd.setCursor(0, 1);
-    lcd.print("<   " + (String) cilova + "   >");
-    stisk_3 = digitalRead(tlacitka[2]);
-    while (stisk_3 == LOW) {
-      cilova = cilova - 5;
-      delay(500);
-      lcd.setCursor(0, 1);
-      lcd.print("<   " + (String) cilova + "   >");
-      stisk_3 = digitalRead(tlacitka[2]);
-    }
-    delay(500);
-  }
-/*
-  else if (stisk_2 == LOW) {
-    tlac = 2;
-    Serial.print(tlac);
-    Serial.println(" stisknuto");
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Change freq:");
-    lcd.setCursor(0, 1);
-    lcd.print("<   " + (String) frek + "   >");
-  }*/
+  Serial.println("ahoj");
+  delay(60000);
 }
